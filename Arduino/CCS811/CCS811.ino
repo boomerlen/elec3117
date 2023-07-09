@@ -11,7 +11,7 @@ void setup() {
 
   Wire.begin();
 
-  //initializes the CCS811 sensor with the specified I2C address (0x5B) and the Wire object.
+  //initializes the CCS811 sensor with the specified I2C address (0x5B) 
   if (!ccs.begin(0x5B, &Wire)) {
     Serial.println("Failed to initialize CCS811 sensor. Check wiring or power supply.");
     while (1);
