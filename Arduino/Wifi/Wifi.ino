@@ -5,7 +5,7 @@
 #define WIFI_SSID "Marlin from Finding Nemo"
 #define WIFI_PSSWD "madsiscool"
 
-#define HOST "10.248.72.146"
+#define HOST "172.20.10.1"
 #define PORT 8000
 
 #define DEVICE_ID "test_unit_0"
@@ -36,18 +36,15 @@ void setup() {
 char *create_post(int data, char *label) {
   // Construct payload
   char payload[100];
-  int payload_len = sprintf(payload, "%c=%c&%c=%d", LABEL_DEVICE_ID, DEVICE_ID, label, data);
+  int payload_len = sprintf(payload, "%s=%s&%s=%d", LABEL_DEVICE_ID, DEVICE_ID, label, data);
 
   // Construct POST request
   char post_stack[1024];
 
-  int post_len = sprintf(post_stack, "POST /device HTTP/1.1\n\
-  Content-Type: application/x-www-form-urlencoded\n\
-  Content-Length: %d\n\n\
-  %c\0", payload_len, payload);
+  int post_len = sprintf(post_stack, "POST /device/data_entry/ HTTP/1.1\nHost: 172.20.10.3\nContent-Type: application/x-www-form-urlencoded\nContent-Length: %d\n\n%s", payload_len, payload);
 
   // Move buffer to stack so we can return ptr to it
-  char *post_heap = (char *) malloc(sizeof(char) * payload_len);
+  char *post_heap = (char *) malloc(sizeof(char) * (post_len+1));
   
   return strcpy(post_heap, post_stack);
 }
@@ -75,12 +72,15 @@ void loop() {
   // I'm stealing from https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/api/wifi.html
 
   Serial.print("Connecting to client: ");
-  Serial.println(HOST);
+  IPAddress ip(172, 20, 10, 3);
+
+  Serial.println(ip);
 
   WiFiClient client;
 
   // Attempt connection to server
-  if (!client.connect(HOST, PORT)) {
+  if (!client.connect(ip, PORT)) {
+    delay(500);
     return;
   }
 
@@ -97,6 +97,7 @@ void loop() {
   client.print(post_data);
   readResponse(&client);
 
+  Serial.println("Freeing memory.");
   free(post_data);
 
   delay(2000);
