@@ -13,8 +13,9 @@ int t0,t3;
 void loop() {
   t0=touchRead(T0); //GPIO4 
   delay(100);
-  t3=touchRead(T3);
-  sprintf (msg,"%d, %d",t0,t3);
+ //t3=touchRead(T3);
+  sprintf (msg,"%d",t0);
+  //sprintf (msg,"%d, %d",t0,t3);
   Serial.println(msg);
   delay(100);
   

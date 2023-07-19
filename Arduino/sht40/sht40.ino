@@ -6,9 +6,7 @@ void setup() {
   Wire.begin();
 
   Serial.begin(115200);
-  while (!Serial) {
-    ;  // Wait for the serial connection to be established
-  }
+
 
   Serial.println("SHT40 Temperature and Humidity Sensor Test");
 
@@ -21,6 +19,22 @@ void setup() {
 
 void loop() {
   // Read the temperature and humidity values from the SHT40 sensor
+  Wire.beginTransmission(SHT40_ADDR);
+  Wire.write(0x89);
+  Wire.endTransmission(false);
+
+  Wire.requestFrom(SHT40_ADDR, 6);
+  for (int i = 0; i < 6; i++) {
+    Serial.print(Wire.read());
+    Serial.print(' ');
+  }
+  Wire.endTransmission();
+  Serial.println("..........");
+
+  delay(1000);
+  return;
+  
+  
   float temperature, humidity;
   if (readSHT40Data(temperature, humidity)) {
     Serial.print("Temperature: ");
