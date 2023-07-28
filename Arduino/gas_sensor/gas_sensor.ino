@@ -16,7 +16,7 @@ void setup()
 
   if (mySensor.begin() == false)
   {
-    Serial.print("CCS811 error");
+    Serial.print("Error");
     while (1);
   }
 }
@@ -33,7 +33,7 @@ void loop()
     Serial.print("CO2: ");
     //Returns calculated CO2 reading
     Serial.println(mySensor.getCO2());
-    Serial.print("tVOC:");
+    Serial.print("TVOC:");
     //Returns calculated TVOC reading
     Serial.println(mySensor.getTVOC());
   }
